@@ -407,3 +407,34 @@ LICENSE
 ```
 
 
+## building image
+
+```
+[ec2-user@ip-172-31-66-188 htmlapp]$ docker build  -t  dockerashu/nginx:v0011  -f  nginx.dockerfile  .
+Sending build context to Docker daemon  63.49kB
+Step 1/5 : FROM  nginx
+ ---> ae2feff98a0c
+Step 2/5 : MAINTAINER  ashutoshh
+ ---> Running in 0d81238d0232
+Removing intermediate container 0d81238d0232
+ ---> 204d34da36c4
+Step 3/5 : WORKDIR  /usr/share/nginx/html
+ ---> Running in ca2a29b9933a
+Removing intermediate container ca2a29b9933a
+ ---> b7122f4104e4
+Step 4/5 : COPY  .  .
+ ---> ecd7dd43be84
+Step 5/5 : EXPOSE  80
+ ---> Running in 08f906cb66b7
+Removing intermediate container 08f906cb66b7
+ ---> 72b3326f4e58
+Successfully built 72b3326f4e58
+Successfully tagged dockerashu/nginx:v0011
+
+```
+## creating container
+
+```
+docker  run -d --name ashungc1  -p 1234:80   72b3326f4e58 
+```
+
