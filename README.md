@@ -378,5 +378,32 @@ c4363349751d        ashu:pyv1           "python hello.py"   4 seconds ago       
 
 ```
    
-   
+# nginx based dockerfile
+
+```
+[ec2-user@ip-172-31-66-188 htmlapp]$ cat  nginx.dockerfile 
+FROM  nginx
+MAINTAINER  ashutoshh
+WORKDIR  /usr/share/nginx/html 
+# above directory is documentroot of nginx webserver 
+COPY  .  .
+# first . is source from docker HOST and second . is target location 
+EXPOSE  80 
+# nginx is having 80 port by default 
+
+```
+
+===
+
+
+```
+[ec2-user@ip-172-31-66-188 htmlapp]$ cat  .dockerignore 
+nginx.dockerfile
+.git
+*.md
+LICENSE
+.dockerignore
+
+```
+
 
