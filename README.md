@@ -74,4 +74,42 @@ Dec 16 05:21:12 ip-172-31-66-188.ec2.internal
 
 ```
 
+## docker architecture 
 
+<img src="darch.png">
+
+## adding users in docker group
+
+```
+[root@ip-172-31-66-188 ~]# for  i  in  `ls  /home`
+> do
+> usermod -aG docker $i
+> done
+
+```
+
+## connecting with docker engine
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker version 
+Client:
+ Version:           19.03.13-ce
+ API version:       1.40
+ Go version:        go1.13.15
+ Git commit:        4484c46
+ Built:             Mon Oct 12 18:51:20 2020
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server:
+ Engine:
+  Version:          19.03.13-ce
+  API version:      1.40 (minimum version 1.12)
+  Go version:       go1.13.15
+  Git commit:       4484c46
+  Built:            Mon Oct 12 18:51:50 2020
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+
+```
