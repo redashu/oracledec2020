@@ -347,3 +347,36 @@ Removing intermediate container 716ce9c3c1e2
 Step 4/7 : COPY  hello.py  /mycode/hello.
 
 ```
+
+## creating container 
+
+```
+[ec2-user@ip-172-31-66-188 pyapp]$ docker  run -it -d  --name  ashupc1  ashu:pyv1 
+c4363349751d339a7bff916c00318f20c84e898e6381b5e3962e70171240fa20
+[ec2-user@ip-172-31-66-188 pyapp]$ docker  ps 
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+c4363349751d        ashu:pyv1           "python hello.py"   4 seconds ago       Up 3 seconds                            ashupc1
+
+```
+
+
+# container registry 
+
+<img src="cr.png">
+
+## image name reality 
+
+<img src="imgname.png">
+
+
+## pushing docker image to docker hub 
+
+```
+ 184  docker  login  -u dockerashu 
+  185  docker  tag  ashu:pyv1   dockerashu/ashu:pyv1
+  186  docker push dockerashu/ashu:pyv1
+
+```
+   
+   
+
