@@ -468,4 +468,45 @@ CMD  ["/usr/sbin/httpd", "-DFOREGROUND"]
 
 ```
 
+## creating container
+
+```
+[ec2-user@ip-172-31-66-188 app1]$ docker run -d --name ashux1 -p 1122:80  ashuapache:httpdv2  
+10d67e329cb76017008dcc0850fa3c242c232c4cd726f5808604e058d7e857af
+[ec2-user@ip-172-31-66-188 app1]$ 
+[ec2-user@ip-172-31-66-188 app1]$ 
+[ec2-user@ip-172-31-66-188 app1]$ docker  ps
+CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                  NAMES
+10d67e329cb7        ashuapache:httpdv2   "/usr/sbin/httpd -DF…"   7 seconds ago       Up 6 seconds        0.0.0.0:1122->80/tcp   ashux1
+f6f5bdfedf37        b5bd76b7e95a         "/usr/sbin/httpd -DF…"   19 seconds ago      Up 18 seconds       0.0.0.0:6524->80/tcp   amarhttpd
+[ec2-user@ip-172-31-66-188 app1]$ curl http://ipinfo.io/json 
+{
+  "ip": "34.233.20.87",
+  "hostname": "ec2-34-233-20-87.compute-1.amazonaws.com",
+  "city": "Virginia Beach",
+  "region": "Virginia",
+  "country": "US",
+  "loc": "36.7978,-76.1759",
+  "org": "AS14618 Amazon.com, Inc.",
+  "postal": "23464",
+  "timezone": "America/New_York",
+  "readme": "https://ipinfo.io/missingauth"
+  
+  ```
+  
+  ## Docker restart policy 
+  
+  [link] ('https://docs.docker.com/config/containers/start-containers-automatically/')
+  
+  ## restart policy 
+  
+  ```
+  [ec2-user@ip-172-31-66-188 ~]$ docker run -d --name xx11 --restart always -p 9900:80 ashuapache:httpdv2 
+22ff804d42a19cb75870f84ea89c559e18e0536149d6d775b61fa6e09790f1e7
+[ec2-user@ip-172-31-66-188 ~]$ docker  update  ashux1  --restart always
+ashux1
+
+
+```
+
   
