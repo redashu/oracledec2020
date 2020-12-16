@@ -438,3 +438,19 @@ Successfully tagged dockerashu/nginx:v0011
 docker  run -d --name ashungc1  -p 1234:80   72b3326f4e58 
 ```
 
+## docker assignment report
+
+```
+192  docker  cp ashuc1:/aa.txt  ashuc2:/aa.txt
+  193  docker  cp ashuc1:/aa.txt  .
+  194  docker  cp ashuc1:/bb..txt  .
+  195  ls
+  196  docker  cp ashuc1:/bb.txt  .
+  197  ls
+  198  docker  cp *.txt  ashuc2:/
+  199  docker  cp aa.txt  ashuc2:/aa.txt
+  200  docker  cp bb.txt  ashuc2:/bb.txt
+  
+  ```
+  
+  
