@@ -237,3 +237,59 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 
    
+## container child process
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker  exec  -it  ashux1  sh 
+/ # 
+/ # 
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # uname 
+Linux
+/ # uname -r
+4.14.203-156.332.amzn2.x86_64
+/ # cat  /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.12.2
+PRETTY_NAME="Alpine Linux v3.12"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://bugs.alpinelinux.org/"
+
+```
+
+##
+
+```
+ 44  docker  exec  ashux1  uname  
+   45  docker  exec  ashux1 "uname -r"
+   46  docker  exec  ashux1  ping google.com
+   47  docker  ps
+   48  docker  exec  ashux1 uname -r
+   49  uname -r
+   50  history 
+   51  docker  exec  -d ashux1  ping google.com
+
+```
+   
+   
+## Docker image building process
+
+<img src="build.png">
+
+## sample python script
+
+```
+import time,subprocess
+
+while 3 > 2:
+    print("Hello world")
+    noc=subprocess.getoutput("docker ps ")
+    time.sleep(2)
+    print("all containers ",noc)
+    print("________________________")
+    print("________________________")
+    time.sleep(2)
+
+```
