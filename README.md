@@ -453,4 +453,19 @@ docker  run -d --name ashungc1  -p 1234:80   72b3326f4e58
   
   ```
   
+  # HTTPD based dockerfile
+  
+  ```
+  [ec2-user@ip-172-31-66-188 app1]$ cat  Dockerfile 
+FROM  centos
+MAINTAINER  ashutoshh
+RUN  yum install  httpd -y
+WORKDIR  /var/www/html/
+ADD . . 
+# add & copy both are same 
+EXPOSE 80
+CMD  ["/usr/sbin/httpd", "-DFOREGROUND"]
+
+```
+
   
