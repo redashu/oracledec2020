@@ -618,3 +618,45 @@ services:
   450  docker-compose  ps
 
 ```
+
+## Example 2
+
+```
+[ec2-user@ip-172-31-66-188 example2]$ cat docker-compose.yml 
+version: "3.8"
+services:
+ ashuwebapp11:
+  image: nginx
+  container_name: ashungc1
+  restart: always
+  ports:
+   - "2211:80"
+  networks:  # using network 
+   - ashubr111
+
+networks:  # creating network
+ ashubr111:
+ 
+ ```
+ 
+ 
+ ## Example 3
+ 
+ ```
+ [ec2-user@ip-172-31-66-188 multiapp]$ cat  ashu.yaml 
+version: "3.8"
+services:
+ ashuimgbld1:
+  image: dockerashu/testimg:v1 
+  build: .  # look for dockerfile to build above image 
+  container_name: ashuncc1 
+  networks:
+   - ashubr2233
+  ports:
+   - "8800:80"
+  restart: always  
+networks:
+ ashubr2233:
+ 
+ ```
+ 
