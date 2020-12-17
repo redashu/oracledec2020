@@ -60,5 +60,57 @@ ENTRYPOINT ["httpd","-DFOREGROUND"]
 
 ```
 
+# multi app 
+
+## dockerfile 
+
+```
+[ec2-user@ip-172-31-66-188 multiapp]$ cat Dockerfile 
+FROM oraclelinux:7.9
+MAINTAINER ashutoshh@linux.com
+ARG software=httpd
+RUN yum install $software  -y
+ENV deploy=app
+RUN mkdir /client  /client/app1  /client/app2  /client/app3
+COPY app1  /client/app1/
+COPY app2  /client/app2/
+COPY app3  /client/app3/
+EXPOSE 80
+ENTRYPOINT   httpd -DFOREGROUND 
+
+```
+
+## shell script 
+
+```
+[ec2-user@ip-172-31-66-188 multiapp]$ cat startapp.sh 
+#!/bin/bash 
+
+
+if  [ "$deploy"  ==  "app1" ]
+then
+	cp -rf  /client/app1/*    /var/www/html/
+	httpd -DFOREGROUND 
+
+elif  [ "$deploy"  ==  "app2" ]
+then
+	cp -rf  /client/app2/*    /var/www/html/
+	httpd -DFOREGROUND 
+
+
+elif  [ "$deploy"  ==  "app3" ]
+then
+	cp -rf  /client/app3/*    /var/www/html/
+	httpd -DFOREGROUND 
+
+
+else 
+
+	echo "You variable is not correct"    >/var/www/html/index.html 
+	httpd -DFOREGROUND 
+
+fi
+
+```
 
 
