@@ -314,3 +314,102 @@ PING xc1 (192.168.1.100): 56 data bytes
 round-trip min/avg/max = 0.089/0.107/0.116 ms
 
 ```
+
+# Docker storage
+
+## Docker engine storage 
+
+<img src="st.png">
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker info 
+Client:
+ Debug Mode: false
+
+Server:
+ Containers: 14
+  Running: 14
+  Paused: 0
+  Stopped: 0
+ Images: 336
+ Server Version: 19.03.13-ce
+ Storage Driver: overlay2
+  Backing Filesystem: xfs
+  
+  ```
+  
+  ## configure docker engine storage steps
+  
+  <img src="dst.png">
+  
+  
+  ## attaching disk instance 
+  
+  ```
+  [ec2-user@ip-172-31-66-188 ~]$ lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  100G  0 disk 
+|-nvme0n1p1   259:1    0  100G  0 part /
+`-nvme0n1p128 259:2    0    1M  0 part 
+[ec2-user@ip-172-31-66-188 ~]$ 
+[ec2-user@ip-172-31-66-188 ~]$ lsblk 
+NAME          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+nvme0n1       259:0    0  100G  0 disk 
+|-nvme0n1p1   259:1    0  100G  0 part /
+`-nvme0n1p128 259:2    0    1M  0 part 
+nvme1n1       259:3    0   50G  0 disk 
+
+```
+## storage format and mount
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ mkfs.xfs  -i size=512  /dev/nvme1n1 
+mkfs.xfs: cannot open /dev/nvme1n1: Permission denied
+[ec2-user@ip-172-31-66-188 ~]$ sudo mkfs.xfs  -i size=512  /dev/nvme1n1 
+meta-data=/dev/nvme1n1           isize=512    agcount=4, agsize=3276800 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=0
+data     =                       bsize=4096   blocks=13107200, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=6400, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+[ec2-user@ip-172-31-66-188 ~]$ sudo mkdir  /var/lib/oracledocker 
+[ec2-user@ip-172-31-66-188 ~]$ sudo mount /dev/nvme1n1  /var/lib/oracledocker
+
+```
+
+## COnfigure new storage in Docker engine 
+
+```
+[root@ip-172-31-66-188 ~]# cd  /etc/sysconfig/
+[root@ip-172-31-66-188 sysconfig]# ls
+acpid       clock     docker          i18n        man-db      network-scripts  readonly-root  rsyslog    sysstat
+atd         console   docker-storage  init        modules     nfs              rpc-rquotad    run-parts  sysstat.ioconf
+authconfig  cpupower  grub            irqbalance  netconsole  raid-check       rpcbind        selinux
+chronyd     crond     htcacheclean    keyboard    network     rdisc            rsyncd         sshd
+[root@ip-172-31-66-188 sysconfig]# vim docker
+[root@ip-172-31-66-188 sysconfig]# cat docker
+# The max number of open files for the daemon itself, and all
+# running containers.  The default value of 1048576 mirrors the value
+# used by the systemd service unit.
+DAEMON_MAXFILES=1048576
+
+# Additional startup options for the Docker daemon, for example:
+# OPTIONS="--ip-forward=true --iptables=true"
+# By default we limit the number of open files per container
+OPTIONS="--default-ulimit nofile=1024:4096 -g /var/lib/oracledocker"
+
+
+```
+
+## restart docker daemon
+
+```
+[root@ip-172-31-66-188 sysconfig]# systemctl daemon-reload 
+[root@ip-172-31-66-188 sysconfig]# systemctl restart docker
+[root@ip-172-31-66-188 sysconfig]# docker info |   grep -i root
+ Docker Root Dir: /var/lib/oracledocker
+
+```
