@@ -660,3 +660,14 @@ networks:
  
  ```
  
+ ##
+
+```
+491  docker-compose -f ashu.yaml up -d
+  492  docker-compose -f ashu.yaml down
+  493  docker-compose -f ashu.yaml up --build -d
+  494  history 
+
+```
+
+
