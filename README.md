@@ -579,3 +579,42 @@ Status: Downloaded newer image for portainer/portainer:latest
 docker-compose version 1.27.4, build 40524192
 
 ```
+# compose file versions 
+
+[version] ('https://docs.docker.com/compose/compose-file/')
+
+## Example 1
+
+```
+ec2-user@ip-172-31-66-188 example1]$ cat docker-compose.yaml 
+version: "3.8"
+services:
+ ashuapp1:
+  image: alpine
+  container_name: ashuxc1
+  command: ping fb.com
+  
+```
+
+## running compose file
+
+```
+ docker-compose  up  -d
+ 
+```
+## more commands
+
+```
+ 440  docker-compose  up  -d
+  441  docker-compose  up  -d --remove-orphans
+  442  docker-compose  ps
+  443  docker-compose stop
+  444  docker-compose  ps
+  445  docker-compose  start
+  446  docker-compose  ps
+  447  docker-compose  kill
+  448  docker-compose  ps
+  449  docker-compose  start
+  450  docker-compose  ps
+
+```
