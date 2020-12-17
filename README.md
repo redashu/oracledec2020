@@ -151,3 +151,115 @@ fi
 [raj@ip-172-31-66-188 multiapp]$ docker  run -d --name cc33 --memory 400m --cpu-share=30 alpine ping fb.com 
 
 ```
+
+# Docker networking 
+
+<img src="dnet.png">
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker  network  ls
+NETWORK ID          NAME                DRIVER              SCOPE
+e7932d9006fa        bridge              bridge              local
+c090dd9621f7        host                host                local
+2193e4221c29        none                null                local
+[ec2-user@ip-172-31-66-188 ~]$ ifconfig  docker0
+docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+        inet6 fe80::42:e6ff:fed8:3d5a  prefixlen 64  scopeid 0x20<link>
+        ether 02:42:e6:d8:3d:5a  txqueuelen 0  (Ethernet)
+        RX packets 40023  bytes 9554173 (9.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 61162  bytes 664981507 (634.1 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
+
+## docker bridge details 
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker network inspect bridge 
+[
+    {
+        "Name": "bridge",
+        "Id": "e7932d9006fa64b1ee2fea7606a7cbae6072470652b62c18168597c1189431d4",
+        "Created": "2020-12-17T03:55:48.674034918Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+
+```
+## creating new bridge
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker network create  ashubr1 
+5e6007b32680db9466a7f4d4c656706adc83b96d8ea1a06f770538db34ef863c
+[ec2-user@ip-172-31-66-188 ~]$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+5e6007b32680        ashubr1             bridge              local
+e7932d9006fa        bridge              bridge              local
+c090dd9621f7        host                host                local
+
+```
+## inspecting 
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker network inspect   ashubr1 
+[
+    {
+        "Name": "ashubr1",
+        "Id": "5e6007b32680db9466a7f4d4c656706adc83b96d8ea1a06f770538db34ef863c",
+        "Created": "2020-12-17T07:16:51.278233803Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+
+```
+
+## attaching container in diff bridge
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker  run -it --rm --network ashubr1 alpine sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:12:00:02  
+          inet addr:172.18.0.2  Bcast:172.18.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:11 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:962 (962.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2): 56 data bytes
+^C
+--- 172.17.0.2 ping statistics ---
+3 packets transmitted, 0 packets received, 100% packet loss
+/ # ping 172.17.0.3
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+^C
+--- 172.17.0.3 ping statistics ---
+2 packets transmitted, 0 packets received, 100% packet loss
+
+```
