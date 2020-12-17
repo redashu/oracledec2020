@@ -263,3 +263,54 @@ PING 172.17.0.3 (172.17.0.3): 56 data bytes
 2 packets transmitted, 0 packets received, 100% packet loss
 
 ```
+
+
+## container with static ip 
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker network create  ashubr2  --subnet 192.168.1.0/24 
+efae21937a38a6ef298392257d0fff292803a75a81f5f3547f1e667837933c95
+[ec2-user@ip-172-31-66-188 ~]$ 
+[ec2-user@ip-172-31-66-188 ~]$ 
+[ec2-user@ip-172-31-66-188 ~]$ docker run -d --name xc1 --network ashubr2 --ip 192.168.1.100 alpine ping fb.com 
+8ad6053d2cb0315c8285b0f173bc60ee15f98ed6db7b566c9242eb850e41bac9
+[ec2-user@ip-172-31-66-188 ~]$ docker run -d --name xc2 --network ashubr2 alpine ping fb.com 
+7496b70cc098ce14cdb9ea3365ba1ebbdd29639f3eba24e8d4c85a08ed6c2ecb
+[ec2-user@ip-172-31-66-188 ~]$ docker  exec -it xc2 sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:C0:A8:01:02  
+          inet addr:192.168.1.2  Bcast:192.168.1.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:25 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:18 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:2218 (2.1 KiB)  TX bytes:1588 (1.5 KiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:252 (252.0 B)  TX bytes:252 (252.0 B)
+
+/ # ping 192.168.1.100
+PING 192.168.1.100 (192.168.1.100): 56 data bytes
+64 bytes from 192.168.1.100: seq=0 ttl=255 time=0.127 ms
+64 bytes from 192.168.1.100: seq=1 ttl=255 time=0.125 ms
+^C
+--- 192.168.1.100 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.125/0.126/0.127 ms
+/ # 
+/ # ping xc1
+PING xc1 (192.168.1.100): 56 data bytes
+64 bytes from 192.168.1.100: seq=0 ttl=255 time=0.089 ms
+64 bytes from 192.168.1.100: seq=1 ttl=255 time=0.116 ms
+64 bytes from 192.168.1.100: seq=2 ttl=255 time=0.116 ms
+^C
+--- xc1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.089/0.107/0.116 ms
+
+```
