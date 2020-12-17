@@ -413,3 +413,169 @@ OPTIONS="--default-ulimit nofile=1024:4096 -g /var/lib/oracledocker"
  Docker Root Dir: /var/lib/oracledocker
 
 ```
+
+## docker storage engine blog link 
+
+[link] ('https://github.com/redashu/docker/tree/master/docker_storage')
+
+```
+ 79  systemctl status docker
+   80  vim  /usr/lib/systemd/system/docker.service
+   
+   ```
+ # Container storage
+ 
+ <img src="contst.png">
+ 
+ ## docker volume creation
+ 
+ ```
+ [ec2-user@ip-172-31-66-188 ~]$ docker  volume ls
+DRIVER              VOLUME NAME
+[ec2-user@ip-172-31-66-188 ~]$ docker  volume  create ashuvol1
+ashuvol1
+[ec2-user@ip-172-31-66-188 ~]$ docker volume inspect  ashuvol1
+[
+    {
+        "CreatedAt": "2020-12-17T09:11:19Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/oracledocker/volumes/ashuvol1/_data",
+        "Name": "ashuvol1",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+
+```
+## container with volume 
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker run -it --name x1  -v ashuvol1:/mnt/ashu:rw      alpine   sh 
+/ # ls 
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # cd /mnt/
+/mnt # ls
+ashu
+/mnt # cd ashu/
+/mnt/ashu # ls
+/mnt/ashu # mkdir hello world this is testing 
+/mnt/ashu # ls
+hello    is       testing  this     world
+/mnt/ashu # exit
+[ec2-user@ip-172-31-66-188 ~]$ docker rm x1 
+x1
+
+```
+## 
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker  run -it --rm -v ashuvol1:/new  oraclelinux:7.9 bash 
+Unable to find image 'oraclelinux:7.9' locally
+7.9: Pulling from library/oraclelinux
+e53c0f5bd985: Pull complete 
+Digest: sha256:76868a897b91e24ff8ae4442c07f3326f28635fb3c2d6bccf2ec90695d87c42f
+Status: Downloaded newer image for oraclelinux:7.9
+[root@6bb500b4eb6f /]# 
+[root@6bb500b4eb6f /]# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  new  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+[root@6bb500b4eb6f /]# cd  new/
+[root@6bb500b4eb6f new]# ls
+hello  is  testing  this  world
+
+
+```
+
+## readony volumes 
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker  run -it --rm -v ashuvol1:/new:ro   oraclelinux:7.9 bash 
+[root@e34636f40041 /]# cd  new/
+[root@e34636f40041 new]# ls
+hello  is  testing  this  world
+[root@e34636f40041 new]# mkdir hiii
+mkdir: cannot create directory 'hiii': Read-only file system
+[root@e34636f40041 new]# rmdir world/
+rmdir: failed to remove 'world/': Read-only file system
+
+```
+
+## multi volumes
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ docker  run -it --rm -v ashuvol1:/new:ro  -v  ashuvol2:/ok:rw   oraclelinux:7.9 bash 
+[root@ec5c905ec168 /]# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  new  ok  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+
+```
+
+## external forlder as docker volume 
+
+```
+  443  docker  run -d --name xx1 -v $(pwd)/app1:/usr/share/nginx/html:ro -p 1133:80 nginx
+  444  ls
+  445  vim app1/index.html 
+  
+  ```
+  
+  
+  ## docker client best practise
+  
+  <img src="dockercli.png">
+  
+  ## portainer based web Ui
+  
+  ```
+  [ec2-user@ip-172-31-66-188 ~]$ docker run --name portainer -d  -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock     portainer/portainer 
+Unable to find image 'portainer/portainer:latest' locally
+latest: Pulling from portainer/portainer
+d1e017099d17: Pull complete 
+717377b83d5c: Pull complete 
+Digest: sha256:f8c2b0a9ca640edf508a8a0830cf1963a1e0d2fd9936a64104b3f658e120b868
+Status: Downloaded newer image for portainer/portainer:latest
+3ad8b4a2fb03b05af07e23cffdbc98287bbccad0ed9889618052ff7cd9e5ece1
+[ec2-user@ip-172-31-66-188 ~]$ docker  logs  portainer
+2020/12/17 09:39:17 Warning: the --template-file flag is deprecated and will likely be removed in a future version of Portainer.
+2020/12/17 09:39:18 server: Reverse tunnelling enabled
+2020/12/17 09:39:18 server: Fingerprint fa:4f:7d:8e:8c:63:70:ba:16:02:49:e5:50:aa:91:17
+2020/12/17 09:39:18 server: Listening on 0.0.0.0:8000...
+2020/12/17 09:39:18 Starting Portainer 1.24.1 on :9000
+2020/12/17 09:39:18 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+[ec2-user@ip-172-31-66-188 ~]$ docker  logs  portainer -f
+2020/12/17 09:39:17 Warning: the --template-file flag is deprecated and will likely be removed in a future version of Portainer.
+2020/12/17 09:39:18 server: Reverse tunnelling enabled
+2020/12/17 09:39:18 server: Fingerprint fa:4f:7d:8e:8c:63:70:ba:16:02:49:e5:50:aa:91:17
+2020/12/17 09:39:18 server: Listening on 0.0.0.0:8000...
+2020/12/17 09:39:18 Starting Portainer 1.24.1 on :9000
+2020/12/17 09:39:18 [DEBUG] [chisel, monitoring] [check_interval_seconds: 10.000000] [message: starting tunnel management process]
+
+
+```
+
+
+## docker compose
+
+<img src="compose.png">
+
+## compose usage and view
+
+<img src="view.png">
+
+## install docker compose
+
+[install] ('https://docs.docker.com/compose/install/')
+
+## installation on linux client
+
+```
+[ec2-user@ip-172-31-66-188 ~]$ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   651  100   651    0     0  29590      0 --:--:-- --:--:-- --:--:-- 29590
+100 11.6M  100 11.6M    0     0  73.7M      0 --:--:-- --:--:-- --:--:-- 73.7M
+[ec2-user@ip-172-31-66-188 ~]$ 
+[ec2-user@ip-172-31-66-188 ~]$ sudo chmod +x /usr/local/bin/docker-compose
+[ec2-user@ip-172-31-66-188 ~]$ docker-compose  -v
+docker-compose version 1.27.4, build 40524192
+
+```
