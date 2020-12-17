@@ -75,8 +75,11 @@ RUN mkdir /client  /client/app1  /client/app2  /client/app3
 COPY app1  /client/app1/
 COPY app2  /client/app2/
 COPY app3  /client/app3/
+COPY startapp.sh  /client/startapp.sh
+WORKDIR  /client
+RUN chmod +x startapp.sh
 EXPOSE 80
-ENTRYPOINT   httpd -DFOREGROUND 
+ENTRYPOINT  ["./startapp.sh"] 
 
 ```
 
