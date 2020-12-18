@@ -286,3 +286,60 @@ say-pod-1      1/1     Running   0          3s
 
 ```
 
+## SOme more commands in pod
+
+```
+❯ kubectl  get  pods  ashu-pod-1
+NAME         READY   STATUS    RESTARTS   AGE
+ashu-pod-1   1/1     Running   0          5m44s
+❯ 
+❯ kubectl get  nodes
+NAME                            STATUS   ROLES                  AGE     VERSION
+ip-172-31-73-69.ec2.internal    Ready    <none>                 6h12m   v1.20.0
+ip-172-31-74-3.ec2.internal     Ready    control-plane,master   6h15m   v1.20.0
+ip-172-31-76-165.ec2.internal   Ready    <none>                 6h12m   v1.20.0
+ip-172-31-77-52.ec2.internal    Ready    <none>                 6h12m   v1.20.0
+❯ kubectl  get  pods  ashu-pod-1   -o wide
+NAME         READY   STATUS    RESTARTS   AGE     IP               NODE                           NOMINATED NODE   READINESS GATES
+ashu-pod-1   1/1     Running   0          6m24s   192.168.59.130   ip-172-31-77-52.ec2.internal   <none>           <none>
+
+
+```
+
+## kubectl dry-run 
+
+<img src="dry.png">
+
+## deleting pod
+
+```
+❯ kubectl  delete pod  ashu-pod-1
+pod "ashu-pod-1" deleted
+
+```
+
+# auto generate yaml
+
+```
+❯ kubectl  run  ashupod2  --image=nginx --restart=Never --port 80  --dry-run=client  -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod2
+  name: ashupod2
+spec:
+  containers:
+  - image: nginx
+    name: ashupod2
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+❯ kubectl  run  ashupod2  --image=nginx --restart=Never --port 80  --dry-run=client  -o yaml  >ashupod2.yml
+
+```
+
