@@ -126,4 +126,54 @@ services:
 
 <img src="or.png">
 
+# Kubernetes 
 
+<img src="google.png">
+
+## k8s client - master - minion 
+
+<img src="k8scmm.png">
+
+##  k8s apiserver
+
+<img src="apiserver.png">
+
+## node controller and kube schedular 
+
+<img src="ncksch.png">
+
+## etcd in k8s
+
+<img src="etcd.png">
+
+## Network bridge on minion side for all containerized applications
+
+<img src="networi.png">
+
+
+## kube-proxy for containers communication 
+
+<img src="kubeproxy.png">
+
+# Minikube installation 
+
+[minikube] ('https://minikube.sigs.k8s.io/docs/start/')
+
+## minikube start
+
+```
+❯ minikube version
+minikube version: v1.16.0
+commit: 9f1e482427589ff8451c4723b6ba53bb9742fbb1
+❯ minikube start --driver=docker
+😄  minikube v1.16.0 on Darwin 11.0.1
+🆕  Kubernetes 1.20.0 is now available. If you would like to upgrade, specify: --kubernetes-version=v1.20.0
+✨  Using the docker driver based on existing profile
+👍  Starting control plane node minikube in cluster minikube
+🚜  Pulling base image ...
+💾  Downloading Kubernetes v1.19.4 preload ...
+    > preloaded-images-k8s-v8-v1....: 21.22 MiB
+    
+  ```
+  
+  
