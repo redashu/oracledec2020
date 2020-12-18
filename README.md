@@ -198,3 +198,13 @@ Client Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.0", GitCom
 
 ```
 
+## app deployment model
+
+<img src="appdep.png">
+
+
+## intro to POD
+
+<img src="pod.png">
+
+
