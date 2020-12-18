@@ -148,7 +148,7 @@ services:
 
 ## Network bridge on minion side for all containerized applications
 
-<img src="networi.png">
+<img src="networl.png">
 
 
 ## kube-proxy for containers communication 
