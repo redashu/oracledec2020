@@ -117,4 +117,13 @@ services:
       
  ```
  
+# COntainer problems
+
+<img src="cp.png">
+
+
+## container orchestration tool
+
+<img src="or.png">
+
 
