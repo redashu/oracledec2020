@@ -343,3 +343,61 @@ status: {}
 
 ```
 
+# Service in k8s
+
+<img src="s1.png">
+
+## labels in svc
+
+<img src="lb.png">
+
+## type of service 
+
+<img src="stype.png">
+
+## Nodeport service
+
+<img src="np.png">
+
+## Nodeport with external Loadbalancer
+
+<img src="nplb.png">
+
+## creating nodeport svc
+
+```
+❯ kubectl  create service nodeport  ashusvc1 --tcp 1234:80  --dry-run=client -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: ashusvc1
+  type: NodePort
+status:
+  loadBalancer: {}
+❯ kubectl  create service nodeport  ashusvc1 --tcp 1234:80  --dry-run=client -o yaml  >ashupod2svc.yml
+
+```
+##
+
+```
+❯ kubectl apply -f ashupod2svc.yml
+service/ashusvc1 created
+❯ kubectl  get  service
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+amarsvc1     NodePort    10.105.134.213   <none>        3241:31550/TCP   2s
+ashusvc1     NodePort    10.100.167.211   <none>        1234:32438/TCP   18s
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          7h21m
+```
+
+
