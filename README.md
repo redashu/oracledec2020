@@ -401,3 +401,7 @@ kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          7h21m
 ```
 
 
+## NodePort reexplain 
+
+<img src="npre.png">
+
