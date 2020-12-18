@@ -207,4 +207,47 @@ Client Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.0", GitCom
 
 <img src="pod.png">
 
+# kubernetes token file on master node
+
+```
+[ec2-user@ip-172-31-74-3 ~]$ cd /etc/kubernetes/
+[ec2-user@ip-172-31-74-3 kubernetes]$ ls
+admin.conf 
+
+```
+
+
+## Connecting from client 
+
+```
+❯ kubectl get nodes --kubeconfig admin.conf
+NAME                            STATUS   ROLES                  AGE     VERSION
+ip-172-31-73-69.ec2.internal    Ready    <none>                 5h42m   v1.20.0
+ip-172-31-74-3.ec2.internal     Ready    control-plane,master   5h45m   v1.20.0
+ip-172-31-76-165.ec2.internal   Ready    <none>                 5h42m   v1.20.0
+ip-172-31-77-52.ec2.internal    Ready    <none>                 5h42m   v1.20.0
+
+
+```
+
+## setting admin.conf under home directory 
+
+```
+❯ whoami
+fire
+❯ echo $HOME
+/Users/fire
+❯ mkdir  /Users/fire/.kube
+mkdir: /Users/fire/.kube: File exists
+❯ cp -v admin.conf /Users/fire/.kube/config
+admin.conf -> /Users/fire/.kube/config
+❯ 
+❯ kubectl get  nodes
+NAME                            STATUS   ROLES                  AGE     VERSION
+ip-172-31-73-69.ec2.internal    Ready    <none>                 5h47m   v1.20.0
+ip-172-31-74-3.ec2.internal     Ready    control-plane,master   5h50m   v1.20.0
+ip-172-31-76-165.ec2.internal   Ready    <none>                 5h47m   v1.20.0
+ip-172-31-77-52.ec2.internal    Ready    <none>                 5h47m   v1.20.0
+
+```
 
