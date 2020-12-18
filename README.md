@@ -176,4 +176,25 @@ commit: 9f1e482427589ff8451c4723b6ba53bb9742fbb1
     
   ```
   
-  
+# k8s cluster installation methods
+
+<img src="k8sinstall.png">
+
+# kubectl installation 
+
+## installation on Mac os
+
+```
+❯ curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 44.0M  100 44.0M    0     0  2096k      0  0:00:21  0:00:21 --:--:-- 2278k
+❯ chmod +x ./kubectl
+❯ sudo mv ./kubectl /usr/local/bin/kubectl
+Password:
+❯ kubectl version --client
+Client Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.0", GitCommit:"af46c47ce925f4c4ad5cc8d1fca46c7b77d13b38", GitTreeState:"clean", BuildDate:"2020-12-08T17:59:43Z", GoVersion:"go1.15.5", Compiler:"gc", Platform:"darwin/amd64"}
+
+
+```
+
