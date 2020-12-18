@@ -251,3 +251,38 @@ ip-172-31-77-52.ec2.internal    Ready    <none>                 5h47m   v1.20.0
 
 ```
 
+# Checking the syntax of YAML file
+
+```
+❯ kubectl apply -f  ashupod1.yaml --dry-run=client
+pod/ashu-pod-1 created (dry run)
+
+```
+
+
+## Deploying POd in k8s cluster
+
+```
+❯ kubectl  get  pods
+No resources found in default namespace.
+❯ 
+❯ kubectl apply -f  ashupod1.yaml
+pod/ashu-pod-1 created
+❯ 
+❯ kubectl  get  pods
+NAME           READY   STATUS              RESTARTS   AGE
+ashu-pod-1     0/1     ContainerCreating   0          5s
+bv-pod-1       0/1     ContainerCreating   0          3s
+midhun-pod-1   0/1     ContainerCreating   0          3s
+ramya-pod1     0/1     ContainerCreating   0          3s
+❯ kubectl  get  pods
+NAME           READY   STATUS    RESTARTS   AGE
+amar-pod-1     1/1     Running   0          9s
+ashu-pod-1     1/1     Running   0          14s
+bv-pod-1       1/1     Running   0          12s
+midhun-pod-1   1/1     Running   0          12s
+ramya-pod1     1/1     Running   0          12s
+say-pod-1      1/1     Running   0          3s
+
+```
+
