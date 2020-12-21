@@ -143,3 +143,59 @@ harisvc1     NodePort    10.98.157.174    <none>        1236:32458/TCP   4m31s
 kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          33m
 
 ```
+
+## ENV and parent process in POD file 
+
+<img src="envp.png">
+
+## Pod with parent process
+
+```
+❯ cat al.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod3
+  name: ashupod3
+spec:
+  containers:
+  - image: alpine
+    name: ashupod3
+    command: ["/bin/sh","-c","ping google.com"]  # to replace entrypoint based parent proces
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+
+```
+
+## Logs of running pod
+
+```
+  kubectl logs -f   ashupod3
+  
+```
+## accessing container 
+
+```
+❯ kubectl exec -it ashupod3  sh
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+/ # 
+/ # 
+/ # 
+/ # %                                                                                                                         ❯ 
+❯ kubectl exec -it ashupod3  -- sh
+/ # 
+/ # 
+/ # cat  /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.12.3
+PRETTY_NAME="Alpine Linux v3.12"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://bugs.alpinelinux.org/"
+
+```
+
