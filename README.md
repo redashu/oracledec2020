@@ -97,3 +97,49 @@ status:
   
  ```
   
+###
+```
+❯ kubectl apply -f ashweb.yml
+pod/ashuwebapp created
+service/ashusvc1 created
+❯ kubectl get  po,svc
+NAME             READY   STATUS    RESTARTS   AGE
+pod/ashuwebapp   1/1     Running   0          10s
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/ashusvc1     NodePort    10.106.177.198   <none>        1234:32626/TCP   9s
+
+```
+
+## ENV in POD 
+
+```
+spec:
+  containers:
+  - image: dockerashu/oracleweb:appv001  # image from docker HUB 1
+    name: ashuwebapp  # container name
+    env:
+     - name: deploy
+       value: app1
+       
+ ```
+ 
+ ## replacing env 
+ 
+ ```
+ ❯ kubectl replace -f ashweb.yml --force
+pod "ashuwebapp" deleted
+service "ashusvc1" deleted
+pod/ashuwebapp replaced
+service/ashusvc1 replaced
+❯ vim ashweb.yml
+❯ kubectl get svc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+amarsvc1     NodePort    10.109.240.157   <none>        3241:30335/TCP   27m
+ashoksvc1    NodePort    10.101.245.246   <none>        1234:32031/TCP   28m
+ashusvc1     NodePort    10.98.1.162      <none>        1234:32339/TCP   12s
+bvwebsvc1    NodePort    10.104.126.206   <none>        4581:31767/TCP   3m54s
+harisvc1     NodePort    10.98.157.174    <none>        1236:32458/TCP   4m31s
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          33m
+
+```
