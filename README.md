@@ -199,3 +199,40 @@ BUG_REPORT_URL="https://bugs.alpinelinux.org/"
 
 ```
 
+# POD drawbacks
+
+<img src="pdb.png">
+
+# Replication controller
+
+<img src="rc.png">
+
+## rc
+
+```
+❯ cat ashu-rc.yml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+ name: ashu-app-1
+ labels:  # label of RC not of POD
+  x: helloashu
+
+spec:
+ replicas: 1   # no of POD we want 
+ template:
+  metadata:
+   labels:
+    app: helloashuapp
+  spec:
+   containers:
+   - image: dockerashu/oracleweb:appv001
+     name: ashuc1
+     env:
+     - name: deploy
+       value: app3
+     ports:
+     - containerPort: 80
+     
+ ```
+ 
