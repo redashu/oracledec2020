@@ -519,4 +519,63 @@ spec:
         
   ```
   
+  ## creating secret for db root password 
+  
+  ```
+  ❯ kubectl  create secret  generic  ashudbsec  --from-literal  pw=oracle12345 -n ashu-space
+secret/ashudbsec created
+❯ kubectl  get  secret  -n ashu-space
+NAME                  TYPE                                  DATA   AGE
+ashudbsec             Opaque                                1      11s
+ashuimg               kubernetes.io/dockerconfigjson        1      163m
+default-token-dj5kt   kubernetes.io/service-account-token   3      4h46m
+
+
+```
+
+## WP db file version 2
+
+```
+❯ cat  wpdb.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+  namespace: ashu-space 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashudb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashudb
+    spec:
+      volumes: # to store db remotely and persistently 
+      - name: ashudbvol1
+        nfs:
+         server: 172.31.28.41  # nfs server IP 
+         path: /db/ashu # storage location on NFS server 
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        volumeMounts:
+        - name: ashudbvol1 
+          mountPath: /var/lib/mysql/ # path where are table will be stored 
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+           secretKeyRef:  # keyword to use secret 
+            name: ashudbsec  # name of secret
+            key: pw  # key of sec
+        resources: {}
+        
+  ```
+  
   
