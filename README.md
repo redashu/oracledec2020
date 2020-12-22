@@ -194,3 +194,15 @@ REVISION  CHANGE-CAUSE
 
 
 ```
+
+
+## more deployments commands
+
+```
+2631  kubectl describe  deploy ashuflaskapp   -n ashu-space 
+ 2632  kubectl  set  image deployment ashuflaskapp  flaskapp=dockerashu/flaskapp:v002 -n ashu-space 
+ 2633  kubectl  rollout status  deployment  ashuflaskapp  -n ashu-space 
+ 2634  kubectl  rollout history   deployment  ashuflaskapp  -n ashu-space 
+ 2635  kubectl describe  deploy ashuflaskapp   -n ashu-space 
+ 
+```
