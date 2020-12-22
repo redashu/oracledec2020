@@ -206,3 +206,56 @@ REVISION  CHANGE-CAUSE
  2635  kubectl describe  deploy ashuflaskapp   -n ashu-space 
  
 ```
+
+## Private registry based application deployment 
+## azure container registry 
+
+<img src="acr.png">
+
+## push image on azure container registry 
+
+```
+ 41  docker  build  -t  app:v1  https://github.com/redashu/ocnginx_html.git 
+   42  docker  images
+   43  docker  tag   app:v1   ashutoshh.azurecr.io/app:v1  
+   44  docker  login  ashutoshh.azurecr.io 
+   45  docker  push    ashutoshh.azurecr.io/app:v1  
+   46  docker  logout   ashutoshh.azurecr.io 
+   
+  ```
+  
+  
+  ## Deployment file creation 
+  
+  ```
+  kubectl  create deployment  azureapp --image=ashutoshh.azurecr.io/app:v1  --namespace ashu-space --dry-run=client -o  yaml  >azureapp.yml
+  
+  ```
+  
+  ## ERROR in pulling private registry image
+  
+  ```
+   2643  kubectl apply -f  azureapp.yml
+ 2644  kubectl  get  deploy -n ashu-space 
+ 2645  kubectl  get po  -n ashu-space 
+ 2646  kubectl describe  pod  azureapp-7bf6988549-lrxbq   -n ashu-space 
+❯ kubectl  get po  -n ashu-space
+NAME                        READY   STATUS             RESTARTS   AGE
+azureapp-7bf6988549-lrxbq   0/1     ImagePullBackOff   0          102s
+
+```
+
+## Secrets in k8s 
+
+<img src="sec.png">
+
+## creating docker secret
+
+```
+kubectl  create secret  docker-registry  ashuimg --docker-username=ashutoshh  --docker-password==L3V/tihOTUb4YiuLqKfh7c6mVNT6GJi  --docker-server=ashutoshh.azurecr.io  -n ashu-space
+
+```
+
+
+  
+  
