@@ -86,3 +86,36 @@ myashusvc   NodePort   10.101.98.70   <none>        1234:30015/TCP   11s
 
 
 ```
+
+## all in mynamespace
+
+```
+❯ kubectl get all -n ashu-space
+NAME                   READY   STATUS    RESTARTS   AGE
+pod/ashu-app-1-4fjdr   1/1     Running   0          2m36s
+pod/ashu-app-1-7nmzq   1/1     Running   0          2m36s
+pod/ashu-app-1-bc85w   1/1     Running   0          2m36s
+pod/ashu-app-1-hr6bn   1/1     Running   0          2m36s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicationcontroller/ashu-app-1   4         4         4       2m36s
+
+NAME                TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+service/myashusvc   NodePort   10.101.98.70   <none>        1234:30015/TCP   89s
+
+```
+
+
+## RC vs RS
+
+<img src="rcrs.png">
+
+## Deployment
+
+<img src="dep.png">
+
+## flask app deployment 
+
+```
+kubectl   create deployment ashuflaskapp --image=dockerashu/flaskapp:v001 --namespace ashu-space  --dry-run=client    -o yaml  >ashuflaskdep.yml
+```
