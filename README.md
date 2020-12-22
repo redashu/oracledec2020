@@ -579,3 +579,95 @@ spec:
   ```
   
   
+## creating service for Db 
+
+```
+ kubectl create  service clusterip  ashudbsvc --tcp 1234:3306  --dry-run=client -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudbsvc
+  name: ashudbsvc
+spec:
+  ports:
+  - name: 1234-3306
+    port: 1234
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: ashudbsvc
+  type: ClusterIP
+status:
+  loadBalancer: {}
+❯ kubectl create  service clusterip  ashudbsvc --tcp 1234:3306  --dry-run=client -o yaml  >>wpdb.yml
+
+```
+
+## DB yaml version 3
+
+```
+❯ cat wpdb.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+  namespace: ashu-space 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashudb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashudb
+    spec:
+      volumes: # to store db remotely and persistently 
+      - name: ashudbvol1
+        nfs:
+         server: 172.31.28.41  # nfs server IP 
+         path: /db/ashu # storage location on NFS server 
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        volumeMounts:
+        - name: ashudbvol1 
+          mountPath: /var/lib/mysql/ # path where are table will be stored 
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+           secretKeyRef:  # keyword to use secret 
+            name: ashudbsec  # name of secret
+            key: pw  # key of sec
+        resources: {}
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudbsvc
+  name: ashudbsvc
+spec:
+  ports:
+  - name: 1234-3306
+    port: 1234
+    protocol: TCP
+    targetPort: 3306
+  selector:
+   app: ashudb # label of POD 
+  type: ClusterIP
+status:
+  loadBalancer: {}
+  
+```
