@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: azureapp
+  name: azureapp
+  namespace: ashu-space
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azureapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: azureapp
+    spec:
+      imagePullSecrets:  # keyword to define secret of docker image type 
+      - name: ashuimg # name of secret 
+      containers:
+      - image: ashutoshh.azurecr.io/app:v2
+        name: app
+        resources: {}
+status: {}

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: minion2dep
+  name: minion2dep
+  namespace: ashu-space 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minion2dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: minion2dep
+    spec:
+      nodeName: ip-172-31-76-165.ec2.internal  # manual scheduling 
+      volumes:
+      - name: ashuvolx1
+        hostPath:
+         path: /var/run/docker.sock
+         type: Socket 
+      containers:
+      - image: portainer/portainer
+        name: portainer
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: ashuvolx1
+          mountPath: /var/run/docker.sock 
+        resources: {}
+status: {}

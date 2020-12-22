@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod11
+  name: ashupod11
+spec:
+  volumes:  # to create any type of  volume during POd creation 
+  - name: ashuvol1  # name of volume 
+    emptyDir: {}  # will take from random location on the minion node
+  containers:
+  - image: alpine
+    name: ashupod11
+    volumeMounts:
+    - name: ashuvol1  # same volume we create above 
+      mountPath: /mnt/data  # this will created in the POD
+    command: ["/bin/sh","-c","while true;do date >>/mnt/data/index.html;sleep 3;done"]
+ 
+  - image: nginx
+    name: ashux1
+    volumeMounts:
+    - name: ashuvol1
+      mountPath: /usr/share/nginx/html/
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
