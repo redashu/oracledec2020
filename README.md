@@ -117,5 +117,56 @@ service/myashusvc   NodePort   10.101.98.70   <none>        1234:30015/TCP   89s
 ## flask app deployment 
 
 ```
-kubectl   create deployment ashuflaskapp --image=dockerashu/flaskapp:v001 --namespace ashu-space  --dry-run=client    -o yaml  >ashuflaskdep.yml
+kubectl   create deployment ashuflaskapp --image=dockerashu/flaskapp:v001 --namespace #-space  --dry-run=client    -o yaml  >ashuflaskdep.yml
 ```
+
+## Deployment 
+
+```
+❯ kubectl apply -f  ashuflaskdep.yml
+deployment.apps/ashuflaskapp created
+❯ kubectl get  deployment  -n ashu-space
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashuflaskapp   1/1     1            1           13s
+❯ kubectl get  deployments  -n ashu-space
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashuflaskapp   1/1     1            1           17s
+❯ 
+❯ kubectl get  deploy  -n ashu-space
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashuflaskapp   1/1     1            1           23s
+❯ kubectl get  rs  -n ashu-space
+NAME                     DESIRED   CURRENT   READY   AGE
+ashuflaskapp-d4ff646b8   1         1         1       34s
+❯ kubectl get po   -n ashu-space
+NAME                           READY   STATUS    RESTARTS   AGE
+ashuflaskapp-d4ff646b8-rw7mt   1/1     Running   0          43s
+
+```
+
+## Creating service by Expose 
+
+```
+❯ kubectl get  deploy -n ashu-space
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashuflaskapp   1/1     1            1           4m26s
+❯ kubectl  expose deployment ashuflaskapp  --type NodePort --port 1234 --target-port 5000 --name myflasksvc -n ashu-space
+service/myflasksvc exposed
+❯ kubectl get svc -n ashu-space
+NAME         TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+myflasksvc   NodePort   10.101.101.103   <none>        1234:32133/TCP   7s
+
+```
+
+## scaling deployment 
+
+```
+❯ kubectl scale deployment ashuflaskapp  --replicas=3  -n ashu-space
+deployment.apps/ashuflaskapp scaled
+❯ kubectl  get deploy -n ashu-space
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashuflaskapp   3/3     3            3           14m
+
+```
+
+
