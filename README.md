@@ -169,4 +169,28 @@ ashuflaskapp   3/3     3            3           14m
 
 ```
 
+## Deployment process flow
 
+<img src="dproc.png">
+
+## checking revision number 
+
+```
+❯ kubectl describe  deploy ashuflaskapp   -n ashu-space
+Name:                   ashuflaskapp
+Namespace:              ashu-space
+CreationTimestamp:      Tue, 22 Dec 2020 10:18:21 +0530
+Labels:                 app=ashuflaskapp
+Annotations:            deployment.kubernetes.io/revision: 1
+
+```
+## checking version history 
+
+```
+❯ kubectl  rollout history deployment  ashuflaskapp  -n ashu-space
+deployment.apps/ashuflaskapp 
+REVISION  CHANGE-CAUSE
+1         <none>
+
+
+```
