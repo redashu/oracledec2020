@@ -914,3 +914,25 @@ status:
   
   ```
   
+## deployment of wordpress
+
+```
+❯ kubectl apply -f wpdb.yml -n ashu-space
+deployment.apps/ashudb configured
+service/ashudbsvc configured
+deployment.apps/ashufrontapp created
+service/ashuwebsvc created
+❯ kubectl  get deploy -n ashu-space
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+ashudb         1/1     1            1           21m
+ashufrontapp   0/1     1            0           12s
+❯ kubectl  get po  -n ashu-space
+NAME                            READY   STATUS    RESTARTS   AGE
+ashudb-5bb5d977-d7pc2           1/1     Running   0          21m
+ashufrontapp-5f9d6997d9-5mlpc   1/1     Running   0          22s
+❯ kubectl  get svc  -n ashu-space
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ashudbsvc    ClusterIP   10.101.46.176   <none>        1234/TCP         21m
+ashuwebsvc   NodePort    10.103.148.79   <none>        1234:31354/TCP   28s
+
+```
