@@ -256,6 +256,164 @@ kubectl  create secret  docker-registry  ashuimg --docker-username=ashutoshh  --
 
 ```
 
+## azure app 
+
+```
+❯ cat  azureapp.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: azureapp
+  name: azureapp
+  namespace: ashu-space
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azureapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: azureapp
+    spec:
+      imagePullSecrets:  # keyword to define secret of docker image type 
+      - name: ashuimg # name of secret 
+      containers:
+      - image: ashutoshh.azurecr.io/app:v1
+        name: app
+        resources: {}
+        
+  ```
+  
+  ## creating loadbalancer service 
+  
+  ```
+  ❯ kubectl expose  deployment azureapp --type LoadBalancer --port 1122 --target-port 80 --name aasvc -n ashu-space
+service/aasvc exposed
+❯ kubectl get svc -n ashu-space
+NAME    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+aasvc   LoadBalancer   10.101.137.202   <pending>     1122:32187/TCP   9s
+
+```
+
+## service with loadbalancer 
+
+<img src="lb.png">
+
+# Storage in K8s 
+
+<img src="storage.png">
+
+## volume url
+
+['volumes in k8s'] ('https://kubernetes.io/docs/concepts/storage/volumes/')
+
+## volume options 
+
+<img src="st1.png">
+
+## EmptyDir volume 
+
+```
+kubectl  run  ashupod11 --image=alpine --restart=Never  --dry-run=client -o yaml >empvol.yml
+
+```
+
+## adding emptydir vol
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod11
+  name: ashupod11
+spec:
+  volumes:  # to create any type of  volume during POd creation 
+  - name: ashuvol1  # name of volume 
+    emptyDir: {}  # will take from random location on the minion node
+  containers:
+  - image: alpine
+    name: ashupod11
+    volumeMounts:
+    - name: ashuvol1  # same volume we create above 
+      mountPath: /mnt/data  # this will created in the POD 
+    command: ["/bin/sh","-c","while true;do date >>/mnt/data/time.txt;sleep 3;done"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+
+```
+
+## deployment 
+
+```
+❯ kubectl apply -f empvol.yml -n ashu-space
+pod/ashupod11 created
+❯ 
+❯ kubectl  get  po -n ashu-space
+NAME        READY   STATUS    RESTARTS   AGE
+ashupod11   1/1     Running   0          12s
+❯ kubectl exec -it  ashupod11 -n ashu-space -- sh
+/ # ls
+bin    etc    lib    mnt    proc   run    srv    tmp    var
+dev    home   media  opt    root   sbin   sys    usr
+/ # cd  /mnt/data/
+/mnt/data # ls
+time.txt
+/mnt/data # cat  time.txt 
+Tue Dec 22 06:50:10 UTC 2020
+Tue Dec 22 06:50:13 UTC 2020
+Tue Dec 22 06:50:16 UTC 2020
+Tue Dec 22 06:50:19 UTC 2020
+Tue Dec 22 06:50:22 UTC 2020
+
+```
+
+## multi container pod
+
+```
+❯ cat empvol.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod11
+  name: ashupod11
+spec:
+  volumes:  # to create any type of  volume during POd creation 
+  - name: ashuvol1  # name of volume 
+    emptyDir: {}  # will take from random location on the minion node
+  containers:
+  - image: alpine
+    name: ashupod11
+    volumeMounts:
+    - name: ashuvol1  # same volume we create above 
+      mountPath: /mnt/data  # this will created in the POD
+    command: ["/bin/sh","-c","while true;do date >>/mnt/data/index.html;sleep 3;done"]
+ 
+  - image: nginx
+    name: ashux1
+    volumeMounts:
+    - name: ashuvol1
+      mountPath: /usr/share/nginx/html/
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+
+
+```
+
 
   
   
