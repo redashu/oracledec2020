@@ -478,3 +478,45 @@ minion2dep   NodePort   10.99.147.244   <none>        1234:32547/TCP   10s
 
 ```
 
+# wordpress deployment 
+
+## DB yaml v1 ---
+
+```
+❯ cat wpdb.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashudb
+  name: ashudb
+  namespace: ashu-space 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ashudb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ashudb
+    spec:
+      volumes: # to store db remotely and persistently 
+      - name: ashudbvol1
+        nfs:
+         server: 172.31.28.41  # nfs server IP 
+         path: /db/ashu # storage location on NFS server 
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        volumeMounts:
+        - name: ashudbvol1 
+          mountPath: /var/lib/mysql/ # path where are table will be stored 
+        resources: {}
+        
+  ```
+  
+  
