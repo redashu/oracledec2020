@@ -415,3 +415,66 @@ status: {}
 ```
 
 
+# Portainer 
+
+## portianer deployment 
+
+```
+ kubectl  create deployment minion2dep --image=portainer/portainer  --dry-run=client -o yaml >portainer.yml
+ 
+ ===
+ 
+ 
+ 
+ ❯ cat portainer.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: minion2dep
+  name: minion2dep
+  namespace: ashu-space 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minion2dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: minion2dep
+    spec:
+      nodeName: ip-172-31-76-165.ec2.internal  # manual scheduling 
+      volumes:
+      - name: ashuvolx1
+        hostPath:
+         path: /var/run/docker.sock
+         type: Socket 
+      containers:
+      - image: portainer/portainer
+        name: portainer
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: ashuvolx1
+          mountPath: /var/run/docker.sock 
+        resources: {}
+        
+    ======
+    ❯ kubectl apply -f portainer.yml -n ashu-space
+deployment.apps/minion2dep created
+❯ kubectl get deploy -n ashu-space
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+minion2dep   1/1     1            1           8s
+❯ kubectl expose deployment minion2dep  --type NodePort --port 1234 --target-port 9000 -n ashu-space
+service/minion2dep exposed
+❯ kubectl get  svc -n ashu-space
+NAME         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+minion2dep   NodePort   10.99.147.244   <none>        1234:32547/TCP   10s
+
+
+```
+
