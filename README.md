@@ -936,3 +936,75 @@ ashudbsvc    ClusterIP   10.101.46.176   <none>        1234/TCP         21m
 ashuwebsvc   NodePort    10.103.148.79   <none>        1234:31354/TCP   28s
 
 ```
+
+
+# Context or Env in k8s 
+
+<img src="env.png">
+
+# dashboard in k8s 
+
+<img src="user.png">
+
+
+## service account and secret in k8s
+
+```
+2818  kubectl  get  sa  -n ashu-space 
+ 2819  kubectl  create  namespace xyz 
+ 2820  kubectl  get  serviceaccount -n xyz 
+ 2821  kubectl  get  serviceaccount -n ashu-space 
+ 2822  kubectl  get  sa  -n xyz 
+ 2823  kubectl get sa -n kube-public 
+ 2824  kubectl get secret  -n xyz
+ 2825  kubectl describe secret default-token-hpczx   -n xyz 
+ 
+ ```
+ ## dashboard deployment
+ 
+ ```
+ ❯ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/dashboard-metrics-scraper created
+❯ kubectl get  ns
+NAME                   STATUS   AGE
+
+
+```
+
+## checking 
+
+```
+❯ kubectl get po -n kubernetes-dashboard
+NAME                                         READY   STATUS    RESTARTS   AGE
+dashboard-metrics-scraper-7b59f7d4df-mbq85   1/1     Running   0          48s
+kubernetes-dashboard-74d688b6bc-dgclv        1/1     Running   0          50s
+❯ kubectl get svc  -n kubernetes-dashboard
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+dashboard-metrics-scraper   ClusterIP   10.107.3.87      <none>        8000/TCP   64s
+kubernetes-dashboard        ClusterIP   10.104.108.121   <none>        443/TCP    73s
+❯ kubectl get sa  -n kubernetes-dashboard
+NAME                   SECRETS   AGE
+default                1         90s
+kubernetes-dashboard   1         88s
+❯ kubectl get secret  -n kubernetes-dashboard
+NAME                               TYPE                                  DATA   AGE
+default-token-7rvwr                kubernetes.io/service-account-token   3      99s
+kubernetes-dashboard-certs         Opaque                                0      95s
+kubernetes-dashboard-csrf          Opaque                                1      94s
+kubernetes-dashboard-key-holder    Opaque                                2      94s
+kubernetes-dashboard-token-rd426   kubernetes.io/service-account-token   3      97s
+
+```
